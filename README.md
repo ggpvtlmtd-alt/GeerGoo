@@ -1,54 +1,56 @@
 # 🚀 GeerGoo
 
-> **AI-Powered Root Cause Analysis Platform for Developers**
+> **AI-Powered Root Cause Analysis Platform**
 
-GeerGoo is a modern AI-powered platform that helps developers analyze application logs, identify the root cause of software issues, and receive intelligent recommendations to resolve them faster.
+GeerGoo is an AI-powered platform that helps software developers analyze application logs, identify the root cause of software issues, and receive intelligent recommendations to resolve them faster.
 
-Our goal is to reduce debugging time and improve developer productivity using Artificial Intelligence.
+Our mission is to simplify software debugging using Artificial Intelligence and improve developer productivity.
 
 ---
 
-## 🌟 Problem Statement
+# 🌟 Problem Statement
 
-Developers spend a significant amount of time manually analyzing large log files, stack traces, and error reports to identify the root cause of software failures.
+Developers spend hours manually reading log files, stack traces, and error reports to identify the root cause of software failures.
 
 This process is:
-- Time-consuming
-- Error-prone
-- Repetitive
-- Slows down software development
+
+- ⏳ Time-consuming
+- ❌ Error-prone
+- 🔁 Repetitive
+- 📉 Reduces developer productivity
 
 ---
 
-## 💡 Solution
+# 💡 Our Solution
 
-GeerGoo simplifies debugging by allowing developers to upload log files.
+GeerGoo provides an intelligent platform where developers can upload application logs and receive AI-powered insights.
 
-The platform uses AI to:
-- Analyze logs
-- Detect the root cause
-- Explain errors in simple language
-- Suggest possible fixes
-- Classify severity
-- Maintain analysis history
+The platform helps developers by:
+
+- 📄 Analyzing log files
+- 🔍 Detecting the root cause
+- 💡 Explaining errors in simple language
+- 🛠 Suggesting possible fixes
+- 🚨 Classifying severity levels
+- 📜 Maintaining analysis history
 
 ---
 
-## ✨ Features
+# ✨ Features
 
-- 🔐 Secure Authentication
+- 🔐 User Authentication
 - 📁 Project Management
-- 📄 Log File Upload
+- 📤 Log File Upload
 - 🤖 AI-Powered Log Analysis
-- 📊 Root Cause Detection
+- 🔍 Root Cause Detection
 - 🚨 Severity Classification
 - 💡 AI Suggested Solutions
+- 📊 Dashboard & Analytics
 - 📜 Analysis History
-- 📈 Dashboard & Analytics
 
 ---
 
-## 🛠 Tech Stack
+# 🛠 Tech Stack
 
 ### Frontend
 - React
@@ -63,19 +65,19 @@ The platform uses AI to:
 ### Database
 - PostgreSQL
 
-### AI
-- AI API Integration (Gemini/Grok/OpenAI)
+### AI Integration
+- Gemini / Grok / OpenAI API
 
-### Tools
+### Development Tools
 - GitHub
+- VS Code
 - Postman
 - Docker
 - Figma
-- VS Code
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```
 GeerGoo/
@@ -89,89 +91,89 @@ GeerGoo/
 
 ---
 
-## 🚀 Project Workflow
+# ⚙️ Workflow
 
 ```
 Developer
-     │
-     ▼
+      │
+      ▼
 Upload Log File
-     │
-     ▼
+      │
+      ▼
 Django Backend
-     │
-     ▼
+      │
+      ▼
 AI Analysis
-     │
-     ▼
+      │
+      ▼
 Root Cause Detection
-     │
-     ▼
+      │
+      ▼
 Suggested Solution
-     │
-     ▼
+      │
+      ▼
 Dashboard & History
 ```
 
 ---
 
-## 🎯 Project Goals
+# 🎯 Project Goals
 
 - Reduce debugging time
-- Improve software reliability
+- Improve software quality
 - Assist developers using AI
 - Provide intelligent debugging insights
 - Build a scalable SaaS platform
 
 ---
 
-## 👥 Team
+# 👥 Team GeerGoo
 
-| Role | Responsibility |
-|------|----------------|
-| Project Lead | Architecture, Backend, AI Integration |
-| Frontend Developer | React UI Development |
-| Backend Developer | APIs & Database |
-| DevOps & QA | Testing & Deployment |
-
----
-
-## 📅 Current Status
-
-🚧 MVP (Minimum Viable Product) Development
+| Name | Role |
+|------|------|
+| **A. Chetan Kumar** | 🚀 Project Lead • Backend Developer • AI Integration |
+| **Joy Princy** | 🎨 Frontend Developer |
+| **Ananya** | ⚙️ Backend Developer |
+| **Sanjana** | ☁️ DevOps & QA Engineer |
 
 ---
 
-## 🔮 Future Scope
+# 🚧 Project Status
 
-- VS Code Extension
-- CLI Tool
-- Browser Extension
-- Team Collaboration
-- Cloud Deployment
-- AI Agent for Automated Debugging
-- Enterprise Dashboard
+**Current Phase:** MVP (Minimum Viable Product)
+
+We are currently building the first version of GeerGoo with the core features and AI integration.
 
 ---
 
-## 🤝 Contribution
+# 🔮 Future Scope
 
-This project is currently under active development.
-
-Contributions, suggestions, and feedback are welcome in future releases.
-
----
-
-## 📄 License
-
-This project is currently private.
-
-© 2026 GeerGoo. All Rights Reserved.
+- 🧩 VS Code Extension
+- 💻 CLI Tool
+- 🌐 Browser Extension
+- 👥 Team Collaboration
+- ☁️ Cloud Deployment
+- 🤖 AI Agent for Automated Debugging
+- 📈 Enterprise Dashboard
 
 ---
 
-## ⭐ Vision
+# 🤝 Contributions
+
+This project is currently under active development by Team GeerGoo.
+
+---
+
+# 📜 License
+
+This repository is currently private.
+
+© 2026 Team GeerGoo. All Rights Reserved.
+
+---
+
+# ⭐ Vision
 
 > **Debug Smarter. Build Faster.**
 
-GeerGoo aims to become the intelligent debugging companion for every software developer.
+GeerGoo aims to become an intelligent debugging assistant that empowers developers to solve software issues faster using AI.
