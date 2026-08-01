@@ -1,120 +1,111 @@
 import re
+from pathlib import Path
 
 
 class LogParser:
     """
-    Parses log files and extracts useful information
-    for AI analysis.
+    Parses log files and extracts useful information.
     """
 
     def __init__(self, file_path):
         self.file_path = file_path
 
-    def read_log(self):
-        """
-        Read log file safely.
-        """
+    def parse(self):
+
         with open(self.file_path, "r", encoding="utf-8", errors="ignore") as file:
-            return file.read()
+            log = file.read()
 
-    def detect_language(self, text):
-        """
-        Detect programming language/framework.
-        """
+        return {
+            "language": self.detect_language(log),
+            "error": self.extract_error(log),
+            "file": self.extract_file(log),
+            "line": self.extract_line(log),
+            "stack_trace": self.extract_stack(log)
+        }
 
-        if "java.lang." in text:
+    # -----------------------------
+    # Detect language/framework
+    # -----------------------------
+
+    def detect_language(self, log):
+
+        if "java.lang." in log:
             return "Java"
 
-        elif "Traceback (most recent call last)" in text:
+        elif "Traceback (most recent call last)" in log:
             return "Python"
 
-        elif "TypeError" in text or "ReferenceError" in text:
+        elif "npm ERR!" in log or "Node.js" in log:
             return "Node.js"
 
-        elif "Exception" in text:
-            return "Java"
+        elif "docker" in log.lower():
+            return "Docker"
+
+        elif "SQLSTATE" in log or "ORA-" in log:
+            return "SQL"
 
         return "Unknown"
 
-    def extract_error(self, text):
-        """
-        Extract main error.
-        """
+    # -----------------------------
+    # Extract error
+    # -----------------------------
+
+    def extract_error(self, log):
 
         patterns = [
-            r"(java\.\w+\.\w+)",
-            r"(\w+Error)",
-            r"(\w+Exception)",
+
+            r"(java\.lang\.[A-Za-z0-9_]+)",
+
+            r"([A-Za-z]+Error)",
+
+            r"([A-Za-z]+Exception)",
+
+            r"(SQLSTATE\[[^\]]+\])",
+
+            r"(ORA-\d+)"
         ]
 
         for pattern in patterns:
-            match = re.search(pattern, text)
+
+            match = re.search(pattern, log)
 
             if match:
                 return match.group(1)
 
         return "Unknown Error"
 
-    def extract_file(self, text):
-        """
-        Extract filename.
-        """
+    # -----------------------------
+    # Extract source file
+    # -----------------------------
 
-        match = re.search(
-            r'([A-Za-z0-9_]+\.(java|py|js|ts|cpp|c))',
-            text
-        )
+    def extract_file(self, log):
+
+        match = re.search(r"\((.+?):(\d+)\)", log)
 
         if match:
-            return match.group(1)
+            return Path(match.group(1)).name
+
+        return "Unknown"
+
+    # -----------------------------
+    # Extract line number
+    # -----------------------------
+
+    def extract_line(self, log):
+
+        match = re.search(r"\((.+?):(\d+)\)", log)
+
+        if match:
+            return int(match.group(2))
 
         return None
 
-    def extract_line(self, text):
-        """
-        Extract line number.
-        """
+    # -----------------------------
+    # Stack trace
+    # -----------------------------
 
-        match = re.search(
-            r":(\d+)",
-            text
-        )
+    def extract_stack(self, log):
 
-        if match:
-            return int(match.group(1))
+        lines = log.splitlines()
 
-        return None
-
-    def extract_stack_trace(self, text):
-        """
-        Return first few lines of stack trace.
-        """
-
-        lines = text.splitlines()
-
-        return "\n".join(lines[:20])
-
-    def parse(self):
-        """
-        Main parser.
-        """
-
-        text = self.read_log()
-
-        return {
-            "language": self.detect_language(text),
-            "error": self.extract_error(text),
-            "file": self.extract_file(text),
-            "line": self.extract_line(text),
-            "stack_trace": self.extract_stack_trace(text),
-            "raw_log": text,
-        }
-
-
-if __name__ == "__main__":
-
-    parser = LogParser("test_logs/java_error.log")
-
-    result = parser.parse()
-
-    print(result)
+        return "\n".join(lines[:25])

@@ -1,38 +1,36 @@
 class PromptBuilder:
-    """
-    Builds a prompt for the AI model using parsed log information.
-    """
 
     @staticmethod
-    def build(parsed_log):
+    def build(parsed):
+
         return f"""
 You are an expert Software Reliability Engineer.
 
 Analyze the following application log.
 
-Programming Language:
-{parsed_log['language']}
+Language:
+{parsed['language']}
 
 Error:
-{parsed_log['error']}
+{parsed['error']}
 
 Source File:
-{parsed_log['file']}
+{parsed['file']}
 
 Line Number:
-{parsed_log['line']}
+{parsed['line']}
 
 Stack Trace:
-{parsed_log['stack_trace']}
+{parsed['stack_trace']}
 
-Please provide:
+Return:
 
 1. Root Cause
-2. Severity (Low/Medium/High/Critical)
+2. Severity
 3. Explanation
 4. Recommended Fix
 5. Best Practices
-6. Confidence Score (0-100)
+6. Confidence Score
 
-Return the response in professional English.
+Respond in JSON.
 """
