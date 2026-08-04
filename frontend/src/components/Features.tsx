@@ -1,29 +1,33 @@
-import { Brain, Shield, BarChart3, Zap } from "lucide-react";
+import { Brain, Shield, BarChart3, Zap, ArrowUpRight } from "lucide-react";
 
 const features = [
   {
     icon: Brain,
-    title: "AI Analysis",
+    title: "Autonomous AI Diagnostics",
     description:
-      "Analyze massive log files using advanced AI models and surface hidden issues in seconds, not hours.",
+      "Parse voluminous stack traces and syslogs. Our contextual models isolate root causes and suggest source-level fixes instantly.",
+    size: "large",
   },
   {
     icon: Shield,
-    title: "Security Detection",
+    title: "Proactive Security Audits",
     description:
-      "Detect suspicious activities, intrusion attempts, and security threats before they become critical.",
+      "Track system privilege escalations, failed authentications, and traffic anomalies to prevent breaches before they spread.",
+    size: "small",
   },
   {
     icon: BarChart3,
-    title: "Smart Reports",
+    title: "Insight Analytics",
     description:
-      "Generate clean, detailed reports with severity classification and actionable insights for your team.",
+      "Aggregate telemetry and generate production health audits. Map error frequencies and latency offsets over time.",
+    size: "small",
   },
   {
     icon: Zap,
-    title: "Error Tracking",
+    title: "Low-latency Diagnostics",
     description:
-      "Automatically detect application errors, performance bottlenecks, and root causes with suggested fixes.",
+      "Process log streams in sub-second intervals. Ingest, parse, and categorize security logs with zero infrastructure overhead.",
+    size: "large",
   },
 ];
 
@@ -31,22 +35,28 @@ function Features() {
   return (
     <section className="features" id="features">
       <div className="features-header">
-        <span className="features-label">Features</span>
-        <h2>Everything you need to debug faster</h2>
+        <span className="features-label">Capabilities</span>
+        <h2>High-fidelity diagnostics for cloud-scale workloads</h2>
         <p className="features-subtitle">
-          GeerGoo combines AI-powered analysis with developer-friendly tools
-          so you can identify, understand, and resolve issues at scale.
+          GeerGoo combines specialized language models with secure log indexing to map infrastructure health in real time.
         </p>
       </div>
 
       <div className="feature-grid">
-        {features.map(({ icon: Icon, title, description }) => (
-          <div className="feature-card" key={title}>
-            <div className="feature-icon">
-              <Icon size={22} strokeWidth={1.75} />
+        {features.map(({ icon: Icon, title, description, size }) => (
+          <div className={`feature-card ${size}`} key={title}>
+            <div className="feature-card-header">
+              <div className="feature-icon">
+                <Icon size={18} strokeWidth={2} />
+              </div>
+              <div className="feature-arrow" aria-hidden="true">
+                <ArrowUpRight size={14} />
+              </div>
             </div>
-            <h3>{title}</h3>
-            <p>{description}</p>
+            <div className="feature-card-body">
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </div>
           </div>
         ))}
       </div>
