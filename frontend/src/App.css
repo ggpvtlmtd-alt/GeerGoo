@@ -4,7 +4,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap");
 
-#root:has(.app) {
+#root:has(.app), #root:has(.auth-container), #root:has(.app-reveal-wrapper) {
   width: 100%;
   max-width: none;
   margin: 0;
@@ -15,26 +15,26 @@
 }
 
 .app {
-  --bg: #050505;
-  --surface: rgba(255, 255, 255, 0.015);
-  --surface-hover: rgba(255, 255, 255, 0.035);
-  --border: rgba(255, 255, 255, 0.04);
-  --border-hover: rgba(255, 255, 255, 0.08);
-  --text: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.52);
-  --text-subtle: rgba(255, 255, 255, 0.28);
+  --bg: #0B0F17;
+  --surface: #111827;
+  --surface-hover: #151E2E;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(59, 130, 246, 0.20);
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-subtle: rgba(148, 163, 184, 0.45);
   
-  --primary: #4F8CFF;
-  --primary-glow: rgba(79, 140, 255, 0.12);
+  --primary: #3B82F6;
+  --primary-glow: rgba(59, 130, 246, 0.08);
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  --radius-sm: 12px; /* Buttons and Inputs */
+  --radius-md: 12px;
+  --radius-lg: 16px; /* Cards */
+  --radius-xl: 16px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 32px 80px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.34);
 
   --container: 1020px;
   --font: "Inter", system-ui, -apple-system, sans-serif;
@@ -180,34 +180,42 @@
   background: #ffffff;
   color: #050505;
   font-weight: 600;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), var(--shadow-sm);
 }
 
 .primary-btn:hover {
-  background: rgba(255, 255, 255, 0.88);
-  transform: translateY(-1px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), var(--shadow-md);
 }
 
 .primary-btn svg {
-  transition: transform 0.2s var(--ease);
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .primary-btn:hover svg {
-  transform: translateX(2px);
+  transform: translateX(4px);
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   color: var(--text-muted);
   border: 1px solid var(--border);
 }
 
+.secondary-btn svg {
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.20);
+  color: #F8FAFC;
   transform: translateY(-1px);
+}
+
+.secondary-btn:hover svg {
+  transform: scale(1.06);
 }
 
 .hero-stats {
@@ -286,9 +294,7 @@
   position: relative;
   width: 100%;
   max-width: 440px;
-  background: rgba(10, 10, 10, 0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: #0B0F17;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -399,11 +405,11 @@
 .mockup-insight {
   margin-top: 4px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  animation: slide-in-insight 0.5s 0.2s var(--ease) both;
+  animation: slide-in-insight 0.8s 2.0s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes slide-in-insight {
@@ -480,10 +486,27 @@
   justify-content: space-between;
   gap: 20px;
   min-height: 180px;
+  overflow: hidden;
   transition: 
-    transform var(--dur-base, 0.24s) var(--ease),
-    border-color var(--dur-base, 0.24s) var(--ease),
-    box-shadow var(--dur-base, 0.24s) var(--ease);
+    transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.035) 0%, transparent 68%);
+  opacity: 0;
+  transition: opacity 0.28s ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
 }
 
 .feature-card.large {
@@ -491,15 +514,16 @@
 }
 
 .feature-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(59, 130, 246, 0.20);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 .feature-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 2;
 }
 
 .feature-icon {
@@ -512,22 +536,28 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--primary);
-  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition: background-color 0.28s ease-out, border-color 0.28s ease-out, transform 0.28s ease-out, color 0.28s ease-out;
 }
 
 .feature-card:hover .feature-icon {
-  background: rgba(79, 140, 255, 0.06);
-  border-color: rgba(79, 140, 255, 0.15);
+  background: rgba(59, 130, 246, 0.06);
+  border-color: rgba(59, 130, 246, 0.15);
+  transform: rotate(6deg);
+  color: #3B82F6;
 }
 
 .feature-arrow {
   color: var(--text-subtle);
-  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+  transition: color 0.28s ease-out, transform 0.28s ease-out;
 }
 
 .feature-card:hover .feature-arrow {
-  color: var(--text-muted);
-  transform: translate(1px, -1px);
+  color: #F8FAFC;
+  transform: translate(3px, -3px);
+}
+
+.feature-card-body {
+  z-index: 2;
 }
 
 .feature-card-body h3 {
@@ -781,15 +811,13 @@
 /* Beautiful glass auth card with outer shine and thin borders */
 .auth-card-v4 {
   width: 100%;
-  max-width: 360px;
-  background: rgba(10, 10, 10, 0.45);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: var(--radius-lg);
+  max-width: 380px;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
   padding: 44px 36px;
   box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 1px 3px rgba(0, 0, 0, 0.3),
     0 24px 64px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.025);
   animation: landing-fade-up 0.5s var(--ease) both;
@@ -860,11 +888,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 38px;
-  padding: 0 10px;
+  height: 42px;
+  padding: 0 12px;
   background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   color: var(--text-subtle);
   transition: 
     background 0.14s ease,
@@ -904,12 +932,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 38px;
+  height: 42px;
   background: #ffffff;
   color: #000000;
   font-size: 0.8125rem;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 12px;
   border: none;
   margin-top: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(255, 255, 255, 0.04);
@@ -1070,4 +1098,105 @@
 
 @media (max-width: 480px) {
   .hero-stats { flex-direction: column; gap: 12px; align-items: center; }
+}
+
+/* ── Live Dashboard Mockup Mini Chart & Animations ── */
+.mockup-chart {
+  width: 100%;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.005);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.mockup-chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.mockup-chart-line {
+  stroke-dasharray: 450;
+  stroke-dashoffset: 450;
+  animation: draw-mockup-line 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.9s;
+}
+
+@keyframes draw-mockup-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.mockup-chart-pulse-dot {
+  opacity: 0;
+  animation: fade-in-dot 0.3s ease forwards 0.9s;
+}
+
+/* Dots staggered fades */
+.mockup-dot-1, .mockup-dot-2, .mockup-dot-3, .mockup-dot-4, .mockup-dot-5 {
+  opacity: 0;
+  animation: fade-in-dot 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in-dot {
+  to { opacity: 1; }
+}
+
+.mockup-dot-1 { animation-delay: 1.0s; }
+.mockup-dot-2 { animation-delay: 1.3s; }
+.mockup-dot-3 { animation-delay: 1.6s; }
+.mockup-dot-4 { animation-delay: 1.9s; }
+.mockup-dot-5 { animation-delay: 2.2s; }
+
+/* Log lines staggered fade-in */
+.mockup-terminal-lines .mockup-log-line {
+  opacity: 0;
+  animation: fade-in-log 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mockup-terminal-lines .mockup-log-line:nth-child(1) {
+  animation-delay: 1.3s;
+}
+
+.mockup-terminal-lines .mockup-log-line:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+.mockup-terminal-lines .mockup-log-line:nth-child(3) {
+  animation-delay: 1.7s;
+}
+
+@keyframes fade-in-log {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle glow pulse for LIVE indicator */
+.live-pill {
+  animation: live-indicator-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes live-indicator-pulse {
+  0%, 100% {
+    opacity: 0.85;
+    background: rgba(59, 130, 246, 0.06);
+    border-color: rgba(59, 130, 246, 0.12);
+  }
+  50% {
+    opacity: 1;
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
 }

@@ -5,7 +5,6 @@ import {
   History,
   User,
   ChevronLeft,
-  Zap,
 } from "lucide-react";
 
 type Props = {
@@ -28,7 +27,7 @@ function DashboardSidebar({ collapsed, onToggle }: Props) {
       {/* Logo */}
       <div className="db-sidebar-logo">
         <div className="db-sidebar-logo-icon">
-          <Zap size={16} strokeWidth={2.5} />
+          <img src="/logo-icon.png" alt="GeerGoo" className="sidebar-logo-img" />
         </div>
         <span className="db-sidebar-logo-text">GeerGoo</span>
       </div>

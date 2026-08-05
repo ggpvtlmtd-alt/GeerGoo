@@ -1,4 +1,30 @@
+import { useState, useEffect } from "react";
 import { Sparkles, ArrowRight, Play, Loader2, Brain, Activity, Terminal } from "lucide-react";
+
+function IngestionCounter() {
+  const [count, setCount] = useState(91420);
+
+  useEffect(() => {
+    let frame: number;
+    const target = 104842;
+    const start = 91420;
+    const duration = 1800;
+    const t0 = performance.now();
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - t0) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const current = Math.floor(start + (target - start) * easedProgress);
+      setCount(current);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return <span>{count.toLocaleString()}</span>;
+}
 
 function Hero() {
   return (
@@ -9,20 +35,20 @@ function Hero() {
 
       <div className="hero-inner">
         <div className="hero-content">
-          <div className="hero-badge">
+          <div className="hero-badge hero-animate-badge">
             <Sparkles size={12} />
             <span>Enterprise Log Intelligence</span>
           </div>
 
-          <h1>
+          <h1 className="hero-animate-title">
             Automate log analysis with <span>AI diagnostics</span>
           </h1>
 
-          <p className="hero-description">
+          <p className="hero-description hero-animate-desc">
             Ingest production logs, trace security anomalies, and map system exceptions to root causes in real time. Designed for high-velocity engineering teams.
           </p>
 
-          <div className="hero-buttons">
+          <div className="hero-buttons hero-animate-btns">
             <button className="primary-btn" type="button">
               Upload Logs
               <ArrowRight size={15} />
@@ -34,7 +60,7 @@ function Hero() {
           </div>
 
           {/* Stats Section with improved typography */}
-          <div className="hero-stats">
+          <div className="hero-stats hero-animate-stats">
             <div className="hero-stat">
               <span className="hero-stat-value">10M+</span>
               <span className="hero-stat-label">Events Audited</span>
@@ -50,7 +76,7 @@ function Hero() {
           </div>
 
           {/* Trusted By Enterprise Logo strip */}
-          <div className="hero-trusted">
+          <div className="hero-trusted hero-animate-trusted">
             <span className="trusted-title">Trusted by engineering teams at</span>
             <div className="trusted-logos">
               {/* Minimal SVG Logos */}
@@ -71,7 +97,7 @@ function Hero() {
         </div>
 
         {/* Live Dashboard Preview (High Fidelity Mockup) */}
-        <div className="hero-visual">
+        <div className="hero-visual hero-animate-preview">
           <div className="hero-mockup">
             <div className="mockup-header">
               <span className="mockup-dot" />
@@ -95,10 +121,45 @@ function Hero() {
                 </div>
               </div>
 
-              {/* Advanced Scanning State */}
+              {/* Advanced Ingestion Counter */}
               <div className="mockup-scan-bar">
                 <Loader2 size={13} />
-                <span>Scanning buffer: 104,842 events/sec</span>
+                <span>Scanning buffer: <IngestionCounter /> events/sec</span>
+              </div>
+
+              {/* Mini SVG Ingestion Line Chart */}
+              <div className="mockup-chart">
+                <svg viewBox="0 0 400 100" className="mockup-chart-svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="mockupChartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.08" />
+                      <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* Grid Lines */}
+                  <line x1="0" y1="25" x2="400" y2="25" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+                  <line x1="0" y1="50" x2="400" y2="50" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+                  <line x1="0" y1="75" x2="400" y2="75" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+                  
+                  {/* Filled Area */}
+                  <path d="M 10,80 C 80,25 120,70 170,45 C 230,20 280,68 330,28 C 360,8 375,18 390,12 L 390,100 L 10,100 Z" fill="url(#mockupChartAreaGrad)" />
+                  
+                  {/* Chart Stroke Line */}
+                  <path d="M 10,80 C 80,25 120,70 170,45 C 230,20 280,68 330,28 C 360,8 375,18 390,12" fill="none" stroke="#3B82F6" strokeWidth="2" className="mockup-chart-line" />
+                  
+                  {/* Gliding Telemetry Pulse Dot */}
+                  <circle r="3.5" fill="#3B82F6" className="mockup-chart-pulse-dot">
+                    <animateMotion dur="5s" repeatCount="indefinite" path="M 10,80 C 80,25 120,70 170,45 C 230,20 280,68 330,28 C 360,8 375,18 390,12" />
+                  </circle>
+                  
+                  {/* Ingestion Data Node Dots */}
+                  <circle cx="10" cy="80" r="3" fill="#0B0F17" stroke="#3B82F6" strokeWidth="1.5" className="mockup-dot-1" />
+                  <circle cx="120" cy="70" r="3" fill="#0B0F17" stroke="#3B82F6" strokeWidth="1.5" className="mockup-dot-2" />
+                  <circle cx="170" cy="45" r="3" fill="#0B0F17" stroke="#3B82F6" strokeWidth="1.5" className="mockup-dot-3" />
+                  <circle cx="330" cy="28" r="3" fill="#0B0F17" stroke="#3B82F6" strokeWidth="1.5" className="mockup-dot-4" />
+                  <circle cx="390" cy="12" r="3" fill="#0B0F17" stroke="#3B82F6" strokeWidth="1.5" className="mockup-dot-5" />
+                </svg>
               </div>
 
               {/* Interactive Log Logs (simulated output) */}

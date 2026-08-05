@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FileText,
   Brain,
@@ -208,10 +209,10 @@ function Dashboard() {
                           </td>
                           <td>{date}</td>
                           <td style={{ padding: "10px 20px", textAlign: "right" }}>
-                            <button className="db-view-btn">
+                            <Link to="/analysis" className="db-view-btn" style={{ display: "inline-flex", gap: "4px" }}>
                               <Eye size={12} />
-                              View
-                            </button>
+                              <span>View</span>
+                            </Link>
                           </td>
                         </tr>
                       );

@@ -1,0 +1,229 @@
+/* ─────────────────────────────────────────────────────────────
+   GeerGoo Splash Screen & Reveal CSS (Single Icon Framer Motion)
+   Aesthetic: Linear × Stripe × Vercel
+   ───────────────────────────────────────────────────────────── */
+
+/* Fullscreen Overlay */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #0B0F17;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1999;
+  overflow: hidden;
+}
+
+/* Ambient Blue Halo Light */
+.splash-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Center Content Layout */
+.splash-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+}
+
+/* Icon Sizing & Formatting */
+.splash-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.splash-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Text and Progress Details */
+.splash-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.splash-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.splash-subtitle {
+  font-size: 0.8125rem;
+  color: #94A3B8;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  margin: 8px 0 0 0;
+  max-width: 360px;
+  line-height: 1.45;
+}
+
+/* Progress bar styling */
+.splash-loader-container {
+  width: 220px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 24px;
+}
+
+.splash-loader-bar {
+  width: 100%;
+  height: 100%;
+  background: #3B82F6;
+  border-radius: 1px;
+  transform-origin: left center;
+}
+
+.splash-loading-text {
+  font-size: 0.75rem;
+  color: #64748B;
+  letter-spacing: 0.05em;
+  margin: 10px 0 0 0;
+  font-weight: 500;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Main Content Wrappers & Sequenced Reveals
+   ───────────────────────────────────────────────────────────── */
+.main-content-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Sequenced Entrance Animations triggered upon splash-complete */
+.navbar-animate {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.hero-animate-badge,
+.hero-animate-title,
+.hero-animate-desc,
+.hero-animate-btns,
+.hero-animate-preview,
+.hero-animate-stats,
+.hero-animate-trusted,
+.feature-card-animate,
+.footer-animate {
+  opacity: 0;
+  transform: translateY(14px);
+  will-change: opacity, transform;
+}
+
+.splash-complete .navbar-animate {
+  animation: reveal-navbar 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.05s;
+}
+
+.splash-complete .hero-animate-badge {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+.splash-complete .hero-animate-title {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.25s;
+}
+
+.splash-complete .hero-animate-desc {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.35s;
+}
+
+.splash-complete .hero-animate-btns {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.45s;
+}
+
+.splash-complete .hero-animate-preview {
+  animation: reveal-item-large 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.6s;
+}
+
+.splash-complete .hero-animate-stats {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.75s;
+}
+
+.splash-complete .hero-animate-trusted {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.9s;
+}
+
+.splash-complete .feature-card-animate:nth-child(1) {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.05s;
+}
+
+.splash-complete .feature-card-animate:nth-child(2) {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.15s;
+}
+
+.splash-complete .feature-card-animate:nth-child(3) {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.25s;
+}
+
+.splash-complete .feature-card-animate:nth-child(4) {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.35s;
+}
+
+.splash-complete .footer-animate {
+  animation: reveal-item 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.5s;
+}
+
+@keyframes reveal-navbar {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reveal-item {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-item-large {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

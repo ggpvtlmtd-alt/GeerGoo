@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Lock, Zap, ArrowRight, ShieldCheck, Terminal } from "lucide-react";
+import { Mail, Lock, ArrowRight, ShieldCheck, Terminal } from "lucide-react";
 
 function Login() {
   const [emailFocused, setEmailFocused] = useState(false);
@@ -17,7 +17,7 @@ function Login() {
           <div className="auth-card-v4">
             <div className="auth-header-v4">
               <div className="auth-brand-v4">
-                <Zap size={18} strokeWidth={2.5} />
+                <img src="/logo-icon.png" alt="GeerGoo" className="auth-brand-logo" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
                 <span>GeerGoo</span>
               </div>
               <h1>Welcome back</h1>

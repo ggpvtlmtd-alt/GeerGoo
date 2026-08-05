@@ -53,6 +53,20 @@
   opacity: 0.9;
 }
 
+.logo-img-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.navbar-logo-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
 .logo-icon {
   display: flex;
   align-items: center;

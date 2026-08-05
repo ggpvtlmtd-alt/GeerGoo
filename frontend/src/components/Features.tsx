@@ -44,7 +44,7 @@ function Features() {
 
       <div className="feature-grid">
         {features.map(({ icon: Icon, title, description, size }) => (
-          <div className={`feature-card ${size}`} key={title}>
+          <div className={`feature-card ${size} feature-card-animate`} key={title}>
             <div className="feature-card-header">
               <div className="feature-icon">
                 <Icon size={18} strokeWidth={2} />
