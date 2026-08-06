@@ -1,0 +1,288 @@
+/* ==========================================================================
+   GeerGoo Self-Contained Splash & Camera Push Transition Module
+   Aesthetic: Apple x Linear x Vercel (Desktop AI Application Launch)
+   ========================================================================== */
+
+/* Fullscreen Backdrop Canvas (Dark overlay & ambient aura) */
+.gg-splash-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: #0B0F17;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+  overflow: hidden;
+  pointer-events: auto;
+  will-change: transform, filter, opacity;
+  transform-origin: center center;
+}
+
+/* Restrained Ambient Blue Halo Glow */
+.gg-splash-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(59, 130, 246, 0.015) 40%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Centered Vertical Stack: Logo stacked ABOVE text with 28px vertical spacing */
+.gg-splash-content-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  position: relative;
+}
+
+/* Logo Container (Positioned ABOVE text) */
+.gg-splash-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px; /* 28px spacing between bottom of logo and top of GeerGoo title */
+  z-index: 12;
+}
+
+/* Logo Wrapper (Size & glow) */
+.gg-splash-logo-wrapper {
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gg-splash-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(59, 130, 246, 0.18));
+}
+
+/* Text & Progress Info Group (Stacked directly below logo) */
+.gg-splash-info-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 11;
+}
+
+.gg-splash-title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.2;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.gg-splash-subtitle {
+  font-size: 0.8125rem;
+  color: #94A3B8;
+  letter-spacing: 0.01em;
+  font-weight: 450;
+  margin: 8px 0 0 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Eased Progress Bar Container */
+.gg-splash-loader-container {
+  width: 220px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 24px;
+}
+
+.gg-splash-loader-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%);
+  border-radius: 1px;
+  transform-origin: left center;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.35);
+}
+
+/* Smooth Cross-Fading Text Container */
+.gg-splash-text-cycler {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  position: relative;
+  min-width: 240px;
+}
+
+.gg-splash-status-text {
+  font-size: 0.75rem;
+  color: #64748B;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Page Wrapper during and after animation */
+.gg-page-reveal-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Sequenced Overlapping Reveal Animations
+   ========================================================================== */
+.navbar-animate,
+.hero-animate-badge,
+.hero-animate-title,
+.hero-animate-desc,
+.hero-animate-btns,
+.hero-animate-preview,
+.hero-animate-stats,
+.hero-animate-trusted,
+.feature-card-animate,
+.footer-animate {
+  opacity: 0;
+  transform: translateY(12px);
+  will-change: opacity, transform;
+}
+
+/* Navbar Fade + Slight translateY (starts at ~70%) */
+.gg-splash-revealing .navbar-animate {
+  animation: gg-reveal-navbar 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.0s;
+}
+
+/* Hero Badge */
+.gg-splash-revealing .hero-animate-badge {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.08s;
+}
+
+/* Hero Title */
+.gg-splash-revealing .hero-animate-title {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.16s;
+}
+
+/* Hero Description */
+.gg-splash-revealing .hero-animate-desc {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.22s;
+}
+
+/* Hero Action Buttons */
+.gg-splash-revealing .hero-animate-btns {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.28s;
+}
+
+/* Dashboard Preview (inside the Hero section) */
+.gg-splash-revealing .hero-animate-preview {
+  animation: gg-reveal-preview 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.28s;
+}
+
+/* Hero Stats Strip */
+.gg-splash-revealing .hero-animate-stats {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.42s;
+}
+
+/* Hero Trusted Logos */
+.gg-splash-revealing .hero-animate-trusted {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.50s;
+}
+
+/* Feature Cards (Staggered 0.08s apart) */
+.gg-splash-revealing .feature-card-animate:nth-child(1) {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.58s;
+}
+
+.gg-splash-revealing .feature-card-animate:nth-child(2) {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.66s;
+}
+
+.gg-splash-revealing .feature-card-animate:nth-child(3) {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.74s;
+}
+
+.gg-splash-revealing .feature-card-animate:nth-child(4) {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.82s;
+}
+
+/* Footer Reveal */
+.gg-splash-revealing .footer-animate {
+  animation: gg-reveal-item 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.90s;
+}
+
+/* Complete State Persistence */
+.gg-splash-complete .navbar-animate,
+.gg-splash-complete .hero-animate-badge,
+.gg-splash-complete .hero-animate-title,
+.gg-splash-complete .hero-animate-desc,
+.gg-splash-complete .hero-animate-btns,
+.gg-splash-complete .hero-animate-preview,
+.gg-splash-complete .hero-animate-stats,
+.gg-splash-complete .hero-animate-trusted,
+.gg-splash-complete .feature-card-animate,
+.gg-splash-complete .footer-animate {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+@keyframes gg-reveal-navbar {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gg-reveal-item {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gg-reveal-preview {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
