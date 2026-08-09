@@ -21,7 +21,10 @@ function App() {
         <Route path="/upload" element={<Upload />} />      
         <Route path="/history" element={<History />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/analysis" element={<AnalysisResult />} />
+       <Route
+              path="/analysis/:analysisId"
+              element={<AnalysisResult />}
+        />
       </Routes>
     </BrowserRouter>
   );

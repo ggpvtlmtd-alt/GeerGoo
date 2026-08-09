@@ -1,0 +1,3 @@
+ERROR: Database connection failed
+WARNING: Memory usage high
+INFO: Server started

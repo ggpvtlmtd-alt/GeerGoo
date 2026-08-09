@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowRight, Play, Loader2, Brain, Activity, Terminal } from "lucide-react";
 
 function IngestionCounter() {
@@ -27,6 +28,8 @@ function IngestionCounter() {
 }
 
 function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="hero" id="hero">
       {/* Grid backdrop and ambient background light */}
@@ -49,7 +52,11 @@ function Hero() {
           </p>
 
           <div className="hero-buttons hero-animate-btns">
-            <button className="primary-btn" type="button">
+            <button
+              className="primary-btn"
+              type="button"
+              onClick={() => navigate("/upload")}
+            >
               Upload Logs
               <ArrowRight size={15} />
             </button>

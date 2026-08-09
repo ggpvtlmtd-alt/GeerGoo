@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Brain,
   Code,
@@ -14,29 +14,269 @@ import {
   FileText,
   Check,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import "../styles/dashboard.css";
 
-const timelineEvents = [
-  { time: "14:23:01.042", level: "info", text: "Ingestion stream received POST /api/v1/users/checkout (200 OK)" },
-  { time: "14:23:02.180", level: "warning", text: "DB Connection Pool utilization spiked above 98.4% threshold" },
-  { time: "14:23:03.512", level: "error", text: "Thread #42 returned null user context reference on pool exhaustion" },
-  { time: "14:23:03.514", level: "critical", text: "NullPointerException thrown at UserService.java:142 inside getUserProfile()" },
-];
+interface TimelineEvent {
+  time?: string;
+  level?: string;
+  text?: string;
+}
+
+interface AnalysisData {
+  id: number;
+  log_file_id: number;
+  severity: string;
+  error_code: string;
+  title: string;
+  summary: string;
+  root_cause: string;
+  timeline: TimelineEvent[];
+  recommended_solution: string;
+  code_fix: string;
+  runtime_framework: string;
+  cluster_node: string;
+  thread_context: string;
+  confidence_score: number;
+  analysis_latency: number;
+  created_at: string;
+}
 
 function AnalysisResult() {
+  const { analysisId } = useParams<{ analysisId: string }>();
+
   const [collapsed, setCollapsed] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchAnalysis = async () => {
+      if (!analysisId) {
+        setError("Analysis ID is missing.");
+        setLoading(false);
+        return;
+      }
+
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        setError("Please sign in again.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/api/analysis/${analysisId}/`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+              data.detail ||
+              "Unable to load analysis."
+          );
+        }
+
+        setAnalysis(data.analysis);
+      } catch (err) {
+        console.error("Analysis fetch error:", err);
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load analysis."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalysis();
+  }, [analysisId]);
+
+  const handleCopy = async () => {
+    if (!analysis) return;
+
+    const diagnosis = `
+GeerGoo AI Diagnosis
+
+Severity: ${analysis.severity}
+Error Code: ${analysis.error_code || "N/A"}
+Title: ${analysis.title}
+
+Summary:
+${analysis.summary}
+
+Root Cause:
+${analysis.root_cause}
+
+Recommended Solution:
+${analysis.recommended_solution}
+
+Code Fix:
+${analysis.code_fix || "No code fix provided."}
+
+Runtime Framework:
+${analysis.runtime_framework || "Not detected"}
+
+Cluster Node:
+${analysis.cluster_node || "Not detected"}
+
+Thread Context:
+${analysis.thread_context || "Not detected"}
+
+Confidence:
+${analysis.confidence_score}%
+`;
+
+    try {
+      await navigator.clipboard.writeText(diagnosis);
+
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Copy failed:", err);
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="db-layout">
+        <DashboardSidebar
+          collapsed={collapsed}
+          onToggle={() => setCollapsed((c) => !c)}
+        />
+
+        <div className="db-main">
+          <DashboardHeader />
+
+          <div className="db-content">
+            <div
+              className="db-card"
+              style={{
+                padding: "60px",
+                textAlign: "center",
+              }}
+            >
+              <Brain
+                size={28}
+                style={{
+                  marginBottom: "12px",
+                  color: "#3B82F6",
+                }}
+              />
+
+              <h2
+                style={{
+                  color: "#F8FAFC",
+                  fontSize: "1rem",
+                }}
+              >
+                Loading AI Diagnosis...
+              </h2>
+
+              <p
+                style={{
+                  color: "#64748B",
+                  fontSize: "0.8rem",
+                  marginTop: "6px",
+                }}
+              >
+                Retrieving Gemini analysis.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !analysis) {
+    return (
+      <div className="db-layout">
+        <DashboardSidebar
+          collapsed={collapsed}
+          onToggle={() => setCollapsed((c) => !c)}
+        />
+
+        <div className="db-main">
+          <DashboardHeader />
+
+          <div className="db-content">
+            <div
+              className="db-card"
+              style={{
+                padding: "60px",
+                textAlign: "center",
+              }}
+            >
+              <h2
+                style={{
+                  color: "#F87171",
+                  fontSize: "1rem",
+                }}
+              >
+                Unable to Load Diagnosis
+              </h2>
+
+              <p
+                style={{
+                  color: "#94A3B8",
+                  marginTop: "8px",
+                }}
+              >
+                {error || "Analysis not found."}
+              </p>
+
+              <Link
+                to="/history"
+                className="db-view-btn"
+                style={{
+                  display: "inline-flex",
+                  gap: "6px",
+                  marginTop: "20px",
+                }}
+              >
+                <ArrowLeft size={13} />
+                Back to History
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const severity = analysis.severity?.toLowerCase() || "info";
+
+  const severityLabel =
+    severity.charAt(0).toUpperCase() +
+    severity.slice(1);
+
   return (
-    <div className={`db-layout${collapsed ? " sidebar-collapsed" : ""}`}>
+    <div
+      className={`db-layout${
+        collapsed ? " sidebar-collapsed" : ""
+      }`}
+    >
       <DashboardSidebar
         collapsed={collapsed}
         onToggle={() => setCollapsed((c) => !c)}
@@ -46,205 +286,799 @@ function AnalysisResult() {
         <DashboardHeader />
 
         <div className="db-content">
-          
+
           {/* Header Action Bar */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <Link to="/history" className="db-view-btn" style={{ gap: "6px" }}>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "20px",
+              gap: "12px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              to="/history"
+              className="db-view-btn"
+              style={{ gap: "6px" }}
+            >
               <ArrowLeft size={13} />
               <span>Back to History</span>
             </Link>
 
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button className="db-view-btn" onClick={handleCopy} style={{ gap: "6px" }}>
-                {copied ? <Check size={13} className="text-blue" /> : <Copy size={13} />}
-                <span>{copied ? "Copied Diagnosis" : "Copy Diagnosis"}</span>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                className="db-view-btn"
+                onClick={handleCopy}
+                style={{ gap: "6px" }}
+              >
+                {copied ? (
+                  <Check
+                    size={13}
+                    className="text-blue"
+                  />
+                ) : (
+                  <Copy size={13} />
+                )}
+
+                <span>
+                  {copied
+                    ? "Copied Diagnosis"
+                    : "Copy Diagnosis"}
+                </span>
               </button>
 
-              <button className="db-view-btn" style={{ gap: "6px" }}>
+              <button
+                className="db-view-btn"
+                style={{ gap: "6px" }}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    window.location.href
+                  );
+                }}
+              >
                 <Share2 size={13} />
                 <span>Share Link</span>
               </button>
 
-              <button className="db-upload-btn" style={{ height: "32px", padding: "0 14px", fontSize: "0.75rem", gap: "6px" }}>
+              <button
+                className="db-upload-btn"
+                style={{
+                  height: "32px",
+                  padding: "0 14px",
+                  fontSize: "0.75rem",
+                  gap: "6px",
+                }}
+                onClick={() =>
+                  window.print()
+                }
+              >
                 <Download size={13} />
                 <span>Export Report (PDF)</span>
               </button>
             </div>
           </div>
 
-          {/* Severity Banner Header */}
-          <div className="db-card" style={{ marginBottom: "24px", padding: "20px 24px", background: "linear-gradient(180deg, rgba(248, 113, 113, 0.04) 0%, rgba(17, 24, 39, 0.95) 100%)", borderColor: "rgba(248, 113, 113, 0.2)" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "16px" }}>
+          {/* Severity Banner */}
+
+          <div
+            className="db-card"
+            style={{
+              marginBottom: "24px",
+              padding: "20px 24px",
+              background:
+                "linear-gradient(180deg, rgba(248, 113, 113, 0.04) 0%, rgba(17, 24, 39, 0.95) 100%)",
+              borderColor:
+                severity === "critical"
+                  ? "rgba(248, 113, 113, 0.2)"
+                  : "var(--c-border)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "16px",
+              }}
+            >
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-                  <span className="db-status critical" style={{ fontSize: "0.75rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "6px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span
+                    className={`db-status ${severity}`}
+                    style={{
+                      fontSize: "0.75rem",
+                    }}
+                  >
                     <span className="db-status-dot" />
-                    CRITICAL SEVERITY
+
+                    {severityLabel.toUpperCase()} SEVERITY
                   </span>
-                  <span style={{ fontSize: "0.75rem", color: "var(--c-text-3)", fontFamily: "monospace" }}>ERR_NULL_POINTER_REF</span>
+
+                  <span
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "var(--c-text-3)",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {analysis.error_code ||
+                      "NO_ERROR_CODE"}
+                  </span>
                 </div>
-                <h1 className="db-page-title" style={{ fontSize: "1.375rem" }}>NullPointerException in UserService.java</h1>
-                <p className="db-page-subtitle" style={{ marginTop: "4px" }}>
-                  Audited from log file <strong style={{ color: "#F8FAFC" }}>syslog_replication.log</strong> (2.4 MB)
+
+                <h1
+                  className="db-page-title"
+                  style={{
+                    fontSize: "1.375rem",
+                  }}
+                >
+                  {analysis.title}
+                </h1>
+
+                <p
+                  className="db-page-subtitle"
+                  style={{
+                    marginTop: "4px",
+                  }}
+                >
+                  Audited from uploaded log file #
+                  {analysis.log_file_id}
                 </p>
               </div>
 
-              <div style={{ display: "flex", gap: "20px", background: "rgba(0,0,0,0.2)", padding: "10px 16px", borderRadius: "10px", border: "1px solid var(--c-border)" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                  background: "rgba(0,0,0,0.2)",
+                  padding: "10px 16px",
+                  borderRadius: "10px",
+                  border:
+                    "1px solid var(--c-border)",
+                }}
+              >
                 <div>
-                  <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "block" }}>ANALYSIS LATENCY</span>
-                  <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#3B82F6" }}>1.12 sec</span>
+                  <span
+                    style={{
+                      fontSize: "0.6875rem",
+                      color: "var(--c-text-3)",
+                      display: "block",
+                    }}
+                  >
+                    ANALYSIS LATENCY
+                  </span>
+
+                  <span
+                    style={{
+                      fontSize: "0.875rem",
+                      fontWeight: 600,
+                      color: "#3B82F6",
+                    }}
+                  >
+                    {analysis.analysis_latency.toFixed(
+                      2
+                    )}{" "}
+                    sec
+                  </span>
                 </div>
-                <div style={{ borderLeft: "1px solid var(--c-border)", paddingLeft: "20px" }}>
-                  <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "block" }}>CONFIDENCE SCORE</span>
-                  <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--c-success)" }}>99.4%</span>
+
+                <div
+                  style={{
+                    borderLeft:
+                      "1px solid var(--c-border)",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.6875rem",
+                      color: "var(--c-text-3)",
+                      display: "block",
+                    }}
+                  >
+                    CONFIDENCE SCORE
+                  </span>
+
+                  <span
+                    style={{
+                      fontSize: "0.875rem",
+                      fontWeight: 600,
+                      color: "var(--c-success)",
+                    }}
+                  >
+                    {analysis.confidence_score.toFixed(
+                      1
+                    )}
+                    %
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Main Flagship Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "1.85fr 1.15fr", gap: "24px", alignItems: "start" }}>
-            
-            {/* Left Column: AI Diagnostics & Root Cause */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              
-              {/* 1. AI Executive Summary Card */}
+          {/* Main Grid */}
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "1.85fr 1.15fr",
+              gap: "24px",
+              alignItems: "start",
+            }}
+          >
+
+            {/* LEFT COLUMN */}
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
+
+              {/* AI Executive Summary */}
+
               <div className="db-card">
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", borderBottom: "1px solid var(--c-border)", paddingBottom: "12px" }}>
-                  <div style={{ color: "var(--c-accent)", background: "var(--c-accent-dim)", padding: "6px", borderRadius: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "12px",
+                    borderBottom:
+                      "1px solid var(--c-border)",
+                    paddingBottom: "12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "var(--c-accent)",
+                      background:
+                        "var(--c-accent-dim)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <Brain size={16} />
                   </div>
+
                   <div>
-                    <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--c-text-1)" }}>AI Executive Summary</h3>
-                    <p style={{ fontSize: "0.6875rem", color: "var(--c-text-3)" }}>Automated incident synthesis</p>
+                    <h3
+                      style={{
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        color: "var(--c-text-1)",
+                      }}
+                    >
+                      AI Executive Summary
+                    </h3>
+
+                    <p
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                      }}
+                    >
+                      Automated incident synthesis
+                    </p>
                   </div>
                 </div>
-                <p style={{ fontSize: "0.875rem", color: "var(--c-text-2)", lineHeight: "1.6" }}>
-                  The application crashed due to an unhandled <strong style={{ color: "#F8FAFC" }}>NullPointerException</strong> during user checkout verification. On high concurrent load, thread #42 experienced database connection pool exhaustion, causing <code style={{ background: "rgba(0,0,0,0.3)", padding: "2px 6px", borderRadius: "4px", color: "#F8FAFC" }}>getUserProfile()</code> to return a null reference which was dereferenced without bounds check.
+
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "var(--c-text-2)",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {analysis.summary}
                 </p>
               </div>
 
-              {/* 2. Root Cause & Code Snippet Trace */}
+              {/* Root Cause */}
+
               <div className="db-card">
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px", borderBottom: "1px solid var(--c-border)", paddingBottom: "12px" }}>
-                  <div style={{ color: "#3B82F6", background: "rgba(59, 130, 246, 0.08)", padding: "6px", borderRadius: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "16px",
+                    borderBottom:
+                      "1px solid var(--c-border)",
+                    paddingBottom: "12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "#3B82F6",
+                      background:
+                        "rgba(59, 130, 246, 0.08)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <Code size={16} />
                   </div>
+
                   <div>
-                    <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--c-text-1)" }}>Root Cause Trace</h3>
-                    <p style={{ fontSize: "0.6875rem", color: "var(--c-text-3)" }}>Isolated stack frame failure location</p>
+                    <h3
+                      style={{
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        color: "var(--c-text-1)",
+                      }}
+                    >
+                      Root Cause Trace
+                    </h3>
+
+                    <p
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                      }}
+                    >
+                      AI-identified root cause
+                    </p>
                   </div>
                 </div>
 
-                <div style={{ background: "#080B11", border: "1px solid var(--c-border)", borderRadius: "10px", overflow: "hidden" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 14px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid var(--c-border)" }}>
-                    <span style={{ fontSize: "0.75rem", fontFamily: "monospace", color: "var(--c-text-2)" }}>UserService.java</span>
-                    <span style={{ fontSize: "0.6875rem", color: "var(--c-danger)", background: "rgba(248, 113, 113, 0.1)", padding: "2px 6px", borderRadius: "4px" }}>Line 142</span>
-                  </div>
-                  
-                  <div style={{ padding: "14px", fontFamily: "monospace", fontSize: "0.8125rem", lineHeight: "1.6", color: "#94A3B8" }}>
-                    <div style={{ opacity: 0.6 }}>140: public UserProfile getUserProfile(String userId) &#123;</div>
-                    <div style={{ opacity: 0.6 }}>141:     UserContext context = dbPool.acquireContext(userId);</div>
-                    <div style={{ background: "rgba(248, 113, 113, 0.12)", color: "#f87171", margin: "4px -14px", padding: "2px 14px", borderLeft: "3px solid #f87171" }}>
-                      142:     return context.getProfile().toDTO(); // NPE TRIPPED HERE
-                    </div>
-                    <div style={{ opacity: 0.6 }}>143: &#125;</div>
-                  </div>
+                <div
+                  style={{
+                    background: "#080B11",
+                    border:
+                      "1px solid var(--c-border)",
+                    borderRadius: "10px",
+                    padding: "16px",
+                    color: "#94A3B8",
+                    fontSize: "0.8125rem",
+                    lineHeight: "1.7",
+                  }}
+                >
+                  {analysis.root_cause ||
+                    "Root cause could not be determined from the uploaded log."}
                 </div>
               </div>
 
-              {/* 3. Event Timeline Card */}
+              {/* Timeline */}
+
               <div className="db-card">
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px", borderBottom: "1px solid var(--c-border)", paddingBottom: "12px" }}>
-                  <div style={{ color: "#fbbf24", background: "rgba(251, 191, 36, 0.08)", padding: "6px", borderRadius: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "16px",
+                    borderBottom:
+                      "1px solid var(--c-border)",
+                    paddingBottom: "12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "#fbbf24",
+                      background:
+                        "rgba(251, 191, 36, 0.08)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <Clock size={16} />
                   </div>
+
                   <div>
-                    <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--c-text-1)" }}>Incident Sequence Timeline</h3>
-                    <p style={{ fontSize: "0.6875rem", color: "var(--c-text-3)" }}>Chronological telemetry trace</p>
+                    <h3
+                      style={{
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        color: "var(--c-text-1)",
+                      }}
+                    >
+                      Incident Sequence Timeline
+                    </h3>
+
+                    <p
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                      }}
+                    >
+                      Chronological telemetry trace
+                    </p>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {timelineEvents.map((evt, idx) => (
-                    <div key={idx} style={{ display: "flex", gap: "12px", alignItems: "start" }}>
-                      <span style={{ fontSize: "0.6875rem", fontFamily: "monospace", color: "var(--c-text-3)", paddingTop: "2px", width: "85px", flexShrink: 0 }}>{evt.time}</span>
-                      <div style={{ flex: 1, padding: "8px 12px", background: "rgba(255,255,255,0.015)", border: "1px solid var(--c-border)", borderRadius: "8px", fontSize: "0.75rem", color: "var(--c-text-2)" }}>
-                        {evt.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {analysis.timeline &&
+                analysis.timeline.length > 0 ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    {analysis.timeline.map(
+                      (evt, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            display: "flex",
+                            gap: "12px",
+                            alignItems: "start",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "0.6875rem",
+                              fontFamily: "monospace",
+                              color:
+                                "var(--c-text-3)",
+                              paddingTop: "2px",
+                              width: "85px",
+                              flexShrink: 0,
+                            }}
+                          >
+                            {evt.time || "--:--:--"}
+                          </span>
+
+                          <div
+                            style={{
+                              flex: 1,
+                              padding:
+                                "8px 12px",
+                              background:
+                                "rgba(255,255,255,0.015)",
+                              border:
+                                "1px solid var(--c-border)",
+                              borderRadius: "8px",
+                              fontSize:
+                                "0.75rem",
+                              color:
+                                "var(--c-text-2)",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontWeight: 600,
+                                marginRight:
+                                  "8px",
+                                textTransform:
+                                  "uppercase",
+                                fontSize:
+                                  "0.65rem",
+                              }}
+                            >
+                              {evt.level ||
+                                "info"}
+                            </span>
+
+                            {evt.text || ""}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                ) : (
+                  <p
+                    style={{
+                      color: "var(--c-text-3)",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    No timeline events were detected.
+                  </p>
+                )}
               </div>
 
-              {/* 4. Actionable Remediation Card */}
-              <div className="db-card" style={{ borderColor: "rgba(52, 211, 153, 0.2)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", borderBottom: "1px solid var(--c-border)", paddingBottom: "12px" }}>
-                  <div style={{ color: "var(--c-success)", background: "rgba(52, 211, 153, 0.08)", padding: "6px", borderRadius: "8px" }}>
+              {/* Recommended Solution */}
+
+              <div
+                className="db-card"
+                style={{
+                  borderColor:
+                    "rgba(52, 211, 153, 0.2)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "12px",
+                    borderBottom:
+                      "1px solid var(--c-border)",
+                    paddingBottom: "12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "var(--c-success)",
+                      background:
+                        "rgba(52, 211, 153, 0.08)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <CheckCircle2 size={16} />
                   </div>
+
                   <div>
-                    <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--c-text-1)" }}>Recommended Patch & Solution</h3>
-                    <p style={{ fontSize: "0.6875rem", color: "var(--c-text-3)" }}>Suggested code fix</p>
+                    <h3
+                      style={{
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        color: "var(--c-text-1)",
+                      }}
+                    >
+                      Recommended Patch & Solution
+                    </h3>
+
+                    <p
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                      }}
+                    >
+                      Suggested remediation
+                    </p>
                   </div>
                 </div>
 
-                <p style={{ fontSize: "0.8125rem", color: "var(--c-text-2)", lineHeight: "1.5", marginBottom: "12px" }}>
-                  Add null safety guard checks and expand DB pool size in <code style={{ background: "rgba(0,0,0,0.3)", padding: "2px 6px", borderRadius: "4px", color: "#F8FAFC" }}>application.yml</code> to 50 connections.
+                <p
+                  style={{
+                    fontSize: "0.8125rem",
+                    color: "var(--c-text-2)",
+                    lineHeight: "1.5",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {analysis.recommended_solution ||
+                    "No recommendation was provided."}
                 </p>
 
-                <div style={{ background: "#080B11", border: "1px solid rgba(52, 211, 153, 0.2)", borderRadius: "8px", padding: "12px", fontFamily: "monospace", fontSize: "0.75rem", color: "#34d399" }}>
-                  + if (context == null) throw new ServiceUnavailableException("DB Pool exhausted");
-                  <br />+ return context.getProfile().toDTO();
-                </div>
+                {analysis.code_fix && (
+                  <div
+                    style={{
+                      background: "#080B11",
+                      border:
+                        "1px solid rgba(52, 211, 153, 0.2)",
+                      borderRadius: "8px",
+                      padding: "12px",
+                      fontFamily: "monospace",
+                      fontSize: "0.75rem",
+                      color: "#34d399",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {analysis.code_fix}
+                  </div>
+                )}
               </div>
-
             </div>
 
-            {/* Right Column: Metadata Sidebar */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              
+            {/* RIGHT COLUMN */}
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
+
+              {/* Incident Attributes */}
+
               <div className="db-card">
-                <div style={{ borderBottom: "1px solid var(--c-border)", paddingBottom: "10px", marginBottom: "16px" }}>
-                  <h3 style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--c-text-1)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Incident Attributes</h3>
+                <div
+                  style={{
+                    borderBottom:
+                      "1px solid var(--c-border)",
+                    paddingBottom: "10px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: "0.8125rem",
+                      fontWeight: 600,
+                      color: "var(--c-text-1)",
+                      textTransform:
+                        "uppercase",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    Incident Attributes
+                  </h3>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "14px",
+                  }}
+                >
                   <div>
-                    <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "flex", alignItems: "center", gap: "6px" }}><Code size={12} /> Runtime Framework</span>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--c-text-1)", fontWeight: 500, marginTop: "2px", display: "block" }}>Java 17 / Spring Boot 3.2</span>
+                    <span
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <Code size={12} />
+                      Runtime Framework
+                    </span>
+
+                    <span
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "var(--c-text-1)",
+                        fontWeight: 500,
+                        marginTop: "2px",
+                        display: "block",
+                      }}
+                    >
+                      {analysis.runtime_framework ||
+                        "Not detected"}
+                    </span>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "flex", alignItems: "center", gap: "6px" }}><Server size={12} /> Cluster Node</span>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--c-text-1)", fontWeight: 500, marginTop: "2px", display: "block" }}>us-east-3 / node-replica-04</span>
+                    <span
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <Server size={12} />
+                      Cluster Node
+                    </span>
+
+                    <span
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "var(--c-text-1)",
+                        fontWeight: 500,
+                        marginTop: "2px",
+                        display: "block",
+                      }}
+                    >
+                      {analysis.cluster_node ||
+                        "Not detected"}
+                    </span>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "flex", alignItems: "center", gap: "6px" }}><Layers size={12} /> Thread Context</span>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--c-text-1)", fontWeight: 500, marginTop: "2px", display: "block" }}>Thread-pool-worker #42</span>
+                    <span
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <Layers size={12} />
+                      Thread Context
+                    </span>
+
+                    <span
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "var(--c-text-1)",
+                        fontWeight: 500,
+                        marginTop: "2px",
+                        display: "block",
+                      }}
+                    >
+                      {analysis.thread_context ||
+                        "Not detected"}
+                    </span>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", display: "flex", alignItems: "center", gap: "6px" }}><FileText size={12} /> Log Package</span>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--c-text-1)", fontWeight: 500, marginTop: "2px", display: "block" }}>syslog_replication.log (2.4 MB)</span>
+                    <span
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <FileText size={12} />
+                      Log Package
+                    </span>
+
+                    <span
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "var(--c-text-1)",
+                        fontWeight: 500,
+                        marginTop: "2px",
+                        display: "block",
+                      }}
+                    >
+                      Log File #{analysis.log_file_id}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Security Shield Card */}
-              <div className="db-card" style={{ background: "rgba(59, 130, 246, 0.02)", borderColor: "rgba(59, 130, 246, 0.15)" }}>
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                  <Terminal size={16} className="text-blue" />
+              {/* Security Card */}
+
+              <div
+                className="db-card"
+                style={{
+                  background:
+                    "rgba(59, 130, 246, 0.02)",
+                  borderColor:
+                    "rgba(59, 130, 246, 0.15)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "center",
+                  }}
+                >
+                  <Terminal
+                    size={16}
+                    className="text-blue"
+                  />
+
                   <div>
-                    <h4 style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--c-text-1)" }}>Redaction Verified</h4>
-                    <p style={{ fontSize: "0.6875rem", color: "var(--c-text-3)", marginTop: "2px" }}>All Auth tokens scrubbed at client proxy</p>
+                    <h4
+                      style={{
+                        fontSize: "0.8125rem",
+                        fontWeight: 600,
+                        color: "var(--c-text-1)",
+                      }}
+                    >
+                      AI Analysis Verified
+                    </h4>
+
+                    <p
+                      style={{
+                        fontSize: "0.6875rem",
+                        color: "var(--c-text-3)",
+                        marginTop: "2px",
+                      }}
+                    >
+                      Diagnosis generated from uploaded
+                      telemetry
+                    </p>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
 
         </div>

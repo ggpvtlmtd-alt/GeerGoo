@@ -1,0 +1,80 @@
+
+[09/Aug/2026 15:08:48] "GET /api/analysis/analyze/1/ HTTP/1.1" 405 40
+[09/Aug/2026 15:09:11] "GET /api/analysis/1/ HTTP/1.1" 200 918
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:13:31] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:13:31] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:13:33] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:13:45] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:49] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:51] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:51] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:52] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:52] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:17:52] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/login/
+[09/Aug/2026 15:22:54] "POST /api/login/ HTTP/1.1" 401 172
+Unauthorized: /api/login/
+[09/Aug/2026 15:23:39] "GET /api/login/ HTTP/1.1" 401 107
+Unauthorized: /api/login/
+[09/Aug/2026 15:23:49] "GET /api/login/ HTTP/1.1" 401 107
+Method Not Allowed: /api/login/
+[09/Aug/2026 15:25:22] "GET /api/login/ HTTP/1.1" 405 40
+Bad Request: /api/login/
+[09/Aug/2026 15:25:26] "POST /api/login/ HTTP/1.1" 400 37
+[09/Aug/2026 15:25:55] "POST /api/login/ HTTP/1.1" 200 743
+[09/Aug/2026 15:26:09] "GET /api/analysis/1/ HTTP/1.1" 200 918
+[09/Aug/2026 15:26:43] "POST /api/login/ HTTP/1.1" 200 743
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:27:55] "POST /api/logs/upload/ HTTP/1.1" 401 172
+[09/Aug/2026 15:28:15] "POST /api/logs/upload/ HTTP/1.1" 201 165
+[09/Aug/2026 15:28:59] "POST /api/analysis/analyze/6/ HTTP/1.1" 201 1135
+[09/Aug/2026 15:30:11] "GET /api/analysis/2/ HTTP/1.1" 200 1096
+[09/Aug/2026 15:30:15] "GET /api/analysis/2/ HTTP/1.1" 200 1096
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:38] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:40] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:40] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:55] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:55] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:55] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:56] "POST /api/logs/upload/ HTTP/1.1" 401 172
+Unauthorized: /api/logs/upload/
+[09/Aug/2026 15:35:56] "POST /api/logs/upload/ HTTP/1.1" 401 172
+[09/Aug/2026 15:36:13] "POST /api/login/ HTTP/1.1" 200 743
+[09/Aug/2026 15:36:21] "POST /api/logs/upload/ HTTP/1.1" 201 174
+[09/Aug/2026 15:36:21] "OPTIONS /api/analysis/analyze/7/ HTTP/1.1" 200 0
+[09/Aug/2026 15:36:34] "POST /api/analysis/analyze/7/ HTTP/1.1" 201 1748
+[09/Aug/2026 15:36:35] "OPTIONS /api/analysis/3/ HTTP/1.1" 200 0
+[09/Aug/2026 15:36:35] "OPTIONS /api/analysis/3/ HTTP/1.1" 200 0
+[09/Aug/2026 15:36:35] "GET /api/analysis/3/ HTTP/1.1" 200 1709
+[09/Aug/2026 15:36:35] "GET /api/analysis/3/ HTTP/1.1" 200 1709
+[09/Aug/2026 15:37:53] "POST /api/logs/upload/ HTTP/1.1" 201 165
+[09/Aug/2026 15:37:53] "OPTIONS /api/analysis/analyze/8/ HTTP/1.1" 200 0
+[09/Aug/2026 15:38:01] "POST /api/analysis/analyze/8/ HTTP/1.1" 201 985
+[09/Aug/2026 15:38:02] "OPTIONS /api/analysis/4/ HTTP/1.1" 200 0
+[09/Aug/2026 15:38:02] "OPTIONS /api/analysis/4/ HTTP/1.1" 200 0
+[09/Aug/2026 15:38:02] "GET /api/analysis/4/ HTTP/1.1" 200 946
+[09/Aug/2026 15:38:02] "GET /api/analysis/4/ HTTP/1.1" 200 946
+[09/Aug/2026 15:40:53] "POST /api/logs/upload/ HTTP/1.1" 201 174
+[09/Aug/2026 15:40:53] "OPTIONS /api/analysis/analyze/9/ HTTP/1.1" 200 0
+[09/Aug/2026 15:41:08] "POST /api/analysis/analyze/9/ HTTP/1.1" 201 2564
+[09/Aug/2026 15:41:08] "OPTIONS /api/analysis/5/ HTTP/1.1" 200 0
+[09/Aug/2026 15:41:08] "OPTIONS /api/analysis/5/ HTTP/1.1" 200 0
+[09/Aug/2026 15:41:08] "GET /api/analysis/5/ HTTP/1.1" 200 2525
+[09/Aug/2026 15:41:08] "GET /api/analysis/5/ HTTP/1.1" 200 2525
