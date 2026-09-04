@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ce(eqqs!3mc(-%ruy7jm^4f$jw&#73^33wu1a0otkrgoix!t_n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://geergoo.onrender.com",]
+ALLOWED_HOSTS = ["geergoo.onrender.com"]
 
 
 # Application definition
