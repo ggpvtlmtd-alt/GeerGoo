@@ -38,3 +38,4 @@ export const MotionProvider: React.FC<MotionProviderProps> = ({ children }) => {
 };
 
 export default MotionProvider;
+

@@ -72,7 +72,7 @@ function AnalysisResult() {
 
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/api/analysis/${analysisId}/`,
+          `/api/analysis/${analysisId}/`,
           {
             method: "GET",
             headers: {

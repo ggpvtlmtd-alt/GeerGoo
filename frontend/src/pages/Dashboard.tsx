@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
-  RefreshCw,
 } from "lucide-react";
 
 import DashboardSidebar from "../components/DashboardSidebar";
@@ -162,7 +161,7 @@ function Dashboard() {
 
         const response =
           await fetch(
-            "http://127.0.0.1:8000/api/analysis/",
+            "/api/analysis/",
             {
               method: "GET",
 
@@ -409,8 +408,7 @@ function Dashboard() {
       const today =
         new Date();
 
-      const days =
-        [];
+      const days: { date: Date; count: number }[] = [];
 
       for (
         let i = 6;
@@ -1771,3 +1769,6 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+

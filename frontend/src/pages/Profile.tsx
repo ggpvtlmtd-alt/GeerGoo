@@ -4,10 +4,7 @@ import {
   Mail,
   Shield,
   Bell,
-  CreditCard,
-  Trash2,
   Building,
-  ExternalLink,
   Phone,
   Calendar,
   LogOut,
@@ -1241,3 +1238,6 @@ function Profile() {
 }
 
 export default Profile;
+
+
+

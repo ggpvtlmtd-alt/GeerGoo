@@ -22,3 +22,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Backend logs
+backend/logs/
+
+# Unrelated image
+WhatsApp Image 2026-08-26 at 7.35.26 PM.png

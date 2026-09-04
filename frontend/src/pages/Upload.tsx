@@ -157,7 +157,7 @@ function Upload() {
       setLoadingRecentFiles(true);
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/analysis/",
+        "/api/analysis/",
         {
           method: "GET",
           headers: {
@@ -378,7 +378,7 @@ function Upload() {
 
       const uploadResponse =
         await fetch(
-          "http://127.0.0.1:8000/api/logs/upload/",
+          "/api/logs/upload/",
           {
             method: "POST",
 
@@ -420,7 +420,7 @@ function Upload() {
 
       const analysisResponse =
         await fetch(
-          `http://127.0.0.1:8000/api/analysis/analyze/${logId}/`,
+          `/api/analysis/analyze/${logId}/`,
           {
             method: "POST",
 

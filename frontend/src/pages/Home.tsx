@@ -12,18 +12,16 @@ import {
   FileText,
   History,
   LogOut,
-  Menu,
   Settings,
   ShieldCheck,
   UploadCloud,
   User,
-  X,
 } from "lucide-react";
 
 import DashboardSidebar from "../components/DashboardSidebar";
 import "../styles/dashboard.css";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "";
 
 interface AnalysisItem {
   id: number;
@@ -606,7 +604,7 @@ function Home() {
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit, minmax(210px, 1fr))",
+                "repeat(auto-fit, minmax(210p 1fr))",
               gap: "14px",
               marginBottom: "20px",
             }}
@@ -718,7 +716,7 @@ function Home() {
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit, minmax(180px, 1fr))",
+                "repeat(auto-fit, minmax(180p 1fr))",
               gap: "14px",
               marginBottom: "24px",
             }}
@@ -762,7 +760,7 @@ function Home() {
             style={{
               display: "grid",
               gridTemplateColumns:
-                "minmax(0, 1.6fr) minmax(300px, 1fr)",
+                "minmax(0, 1.6fr) minmax(300p 1fr)",
               gap: "20px",
               alignItems: "start",
             }}
@@ -1327,3 +1325,5 @@ const menuItemStyle: React.CSSProperties = {
 };
 
 export default Home;
+
+

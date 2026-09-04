@@ -214,3 +214,4 @@ export default function Splash({ children }: SplashProps) {
     </LayoutGroup>
   );
 }
+
