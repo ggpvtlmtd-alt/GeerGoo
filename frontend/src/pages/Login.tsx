@@ -31,7 +31,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "/api/login/",
+        "https://geergoo.onrender.com/api/login/",
         {
           method: "POST",
           headers: {
