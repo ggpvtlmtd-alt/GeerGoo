@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ce(eqqs!3mc(-%ruy7jm^4f$jw&#73^33wu1a0otkrgoix!t_n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://geergoo.onrender.com",]
 
 
 # Application definition
@@ -146,5 +146,5 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "geergoo.onrender.com",
+    "https://geergoo.onrender.com",
 ]
